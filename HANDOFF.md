@@ -34,7 +34,7 @@ Layout completo e funzionante: hero poster + wordmark, 4 finestre (Corsi · Abou
 3. **Credit sito**: `SITE.credit` (metti il nome giusto). = riga "SITE — …" nel footer (chi firma il sito).
 4. **Formspree**: sostituire `FORM_ID` in `index.html` con l'endpoint vero. Nota: con `LOCK_ALL=true` il form ha una sola voce "Lista d'attesa".
 5. (Opz.) **Wordmark come SVG/PNG trasparente** al posto del crop dal PDF (il crop taglia di pochissimo la punta bassa di un paio di aste). Vettoriale = più nitido.
-6. Deploy GitHub Pages (c'è `.nojekyll`). ⚠️ **La cartella NON è ancora un repo git** — serve `git init` + primo commit + creare repo su GitHub + attivare Pages. Da fare **alla fine**, con contenuti veri.
+6. ~~Deploy GitHub Pages~~ ✅ **FATTO (anteprima)**: repo `github.com/rvrsddot/workshok` (branch `main`, root), Pages attivo → **https://rvrsddot.github.io/workshok/**. Account gh: **rvrsddot**. `gh` CLI installato via brew. `FOTO/` e `1x/` esclusi via `.gitignore`. Per aggiornare il sito: modifica qui → `git add -A && git commit && git push` → Pages ri-builda da solo. ⚠️ È online con contenuti placeholder (corsi COMING SOON, date XXX, form senza FORM_ID).
 7. **Anteprima social** (`og:image`/Twitter card) mancante — riusare `assets/sww8-poster.png` (ora asset orfano). Rimandato.
 
 ### BLOCCO A — brief 2ª sessione (FATTO, cache v=9)
@@ -47,10 +47,17 @@ Layout completo e funzionante: hero poster + wordmark, 4 finestre (Corsi · Abou
 - A7 **Card** responsive: `.cards` max-width 1120px + `margin-inline:auto`, `.card` max-height 480px → non si deformano su schermi larghi.
 - A8 Verificato desktop + mobile (375px): 1 colonna, no scroll-x.
 
+### SESSIONE 4 — SEO
+- `<head>` ottimizzato: title/description keyword-rich (design, grafica, architettura, workshop, studenti, professionisti, Ascoli Piceno…), `meta keywords`, `robots index,follow`, `canonical`, **Open Graph + Twitter card** (og:image = `sww8-poster.png`).
+- **JSON-LD schema.org** `EducationalOrganization` + `EducationEvent`: knowsAbout (11 campi), audience (studenti/professionisti), location Ascoli Piceno/Marche, `sponsor` con i collaboratori (Caffè Design, Zetafonts, FF3300, Detroit Studio, Ocularlab, …).
+- Aggiunti **`robots.txt`** + **`sitemap.xml`** (root). L'utente vuole essere trovato → **niente noindex** (deciso di NON nasconderlo).
+- ⚠️ SEO tecnica fatta, ma il ranking reale richiede: contenuti veri dei corsi + submit su **Google Search Console** + tempo/backlink. Da fare quando i contenuti sono definitivi.
+
 ### SESSIONE 3 (cache v=20)
 - **Foto RIMOSSE** (l'utente ha cambiato idea): tolto `.photofan`/`about-wrap`, blocco JS "PHOTO BURST", cartella `assets/photos/`. About tornata a piena larghezza (lede + 2 colonne, con `text-wrap: balance/pretty`).
 - **Finestre collassabili**: click (o Enter/Space) sulla `.win__bar` → `.win.is-collapsed` → il `.win__body` si **ritira su** (max-height→0) lasciando solo la barra; lo status diventa **`[ + OPEN ]`** (torna all'originale riaprendo). Logica in `js/main.js` blocco "Finestre collassabili"; CSS su `.win__bar`/`.win.is-collapsed`. Barra aggiunta agli elementi "hot" del cursore.
-- **Wordmark hero**: glitch **RIMOSSO** (l'utente l'ha tolto, v=21). Resta solo il **deform all'hover**: `.hero__wordmark:hover { transform: skewX(-5deg) scale(1.02) }`. `h1` ristretto a `width:fit-content` così l'hover colpisce solo la scritta.
+- **Wordmark hero → SVG + effetto liquido** (v=22): passato da PNG a **`assets/workshok-wordmark.svg`** (vettoriale half-fill, dall'utente in `SVG/`). Filtro SVG `#liquid` (feTurbulence fractalNoise con `baseFrequency` animata in loop via SMIL + feDisplacementMap) applicato con `filter:url(#liquid)`; il displacement **ondeggia in loop fluido** (scale base 9) e **all'hover s'intensifica** a 34 con lerp rAF (blocco JS "Wordmark liquido" in main.js, id `liquidDisp`). Filtro def in `<svg class="svg-defs">` in `index.html`. Off su reduced-motion. Footer usa lo stesso SVG (statico). Vecchio glitch/skew rimossi.
+- **Favicon → SVG nuovo** dell'utente (`assets/favicon.svg`: cerchio menta + monogramma W), sostituisce il pallino a 2 cerchi. Sorgenti in `SVG/` (`logo workshok.svg`, `favicon.svg`). PNG wordmark non più referenziato (rimuovibile).
 
 ### BLOCCO B — (foto RIMOSSE in sessione 3, vedi sopra)  ~~ventaglio affianco ad About~~
 - 6 foto bass-res scelte (le JPG UUID) → **ottimizzate** con `sips -Z 1000 -s formatOptions 60` in `assets/photos/ph-1..6.jpg` (**676 KB totali**, da centinaia di MB).

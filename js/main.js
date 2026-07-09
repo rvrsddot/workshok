@@ -26,6 +26,24 @@
   set("hero-where", ed.city ? ed.city + ", IT" : "—");
   set("hero-format", (courses.length || 3) + " corsi · " + (ed.days || "3–5 giorni"));
 
+  /* Wordmark liquido: il filtro #liquid ondeggia in loop (SMIL); all'hover
+     intensifico il displacement in modo fluido (lerp su rAF). */
+  (function () {
+    var disp = $("liquidDisp");
+    var wm = document.querySelector(".hero__wordmark");
+    if (!disp || !wm || reduce) return;
+    var BASE = 9, HOVER = 34, cur = BASE, target = BASE, raf = null;
+    function tick() {
+      cur += (target - cur) * 0.1;
+      disp.setAttribute("scale", cur.toFixed(2));
+      if (Math.abs(target - cur) > 0.05) { raf = requestAnimationFrame(tick); }
+      else { disp.setAttribute("scale", target.toFixed(2)); raf = null; }
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(tick); }
+    wm.addEventListener("mouseenter", function () { target = HOVER; kick(); });
+    wm.addEventListener("mouseleave", function () { target = BASE; kick(); });
+  })();
+
   /* ---------- CORSI · card flip ---------- */
   var cards = $("cards");
   var select = $("form-corso");

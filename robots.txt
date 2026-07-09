@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rvrsddot.github.io/workshok/sitemap.xml
