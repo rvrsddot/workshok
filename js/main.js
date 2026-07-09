@@ -26,22 +26,31 @@
   set("hero-where", ed.city ? ed.city + ", IT" : "—");
   set("hero-format", (courses.length || 3) + " corsi · " + (ed.days || "3–5 giorni"));
 
-  /* Wordmark liquido: il filtro #liquid ondeggia in loop (SMIL); all'hover
-     intensifico il displacement in modo fluido (lerp su rAF). */
+  /* Wordmark liquido: SOLO durante l'hover (a riposo nessun filtro → costo zero).
+     Al passaggio appare, la turbolenza ondeggia (flusso) e il displacement sale;
+     uscendo torna nitido e l'animazione si spegne. */
   (function () {
+    var turb = document.querySelector("#liquid feTurbulence");
     var disp = $("liquidDisp");
-    var wm = document.querySelector(".hero__wordmark");
-    if (!disp || !wm || reduce) return;
-    var BASE = 9, HOVER = 34, cur = BASE, target = BASE, raf = null;
-    function tick() {
-      cur += (target - cur) * 0.1;
-      disp.setAttribute("scale", cur.toFixed(2));
-      if (Math.abs(target - cur) > 0.05) { raf = requestAnimationFrame(tick); }
-      else { disp.setAttribute("scale", target.toFixed(2)); raf = null; }
+    var img = document.querySelector(".hero__wordmark .wordmark");
+    if (!turb || !disp || !img || reduce || coarse) return;
+    var HOVER = 26, scale = 0, target = 0, t = 0, hovering = false, raf = null;
+    function frame() {
+      scale += (target - scale) * 0.14;
+      disp.setAttribute("scale", scale.toFixed(2));
+      if (hovering) {
+        t += 0.03;
+        var bf = 0.011 + Math.sin(t) * 0.004;   // ondeggìo della turbolenza = flusso liquido
+        turb.setAttribute("baseFrequency", bf.toFixed(4) + " " + (bf * 1.45).toFixed(4));
+      }
+      if (hovering || scale > 0.15) { raf = requestAnimationFrame(frame); }
+      else { disp.setAttribute("scale", "0"); img.classList.remove("is-liquid"); raf = null; }
     }
-    function kick() { if (!raf) raf = requestAnimationFrame(tick); }
-    wm.addEventListener("mouseenter", function () { target = HOVER; kick(); });
-    wm.addEventListener("mouseleave", function () { target = BASE; kick(); });
+    img.addEventListener("mouseenter", function () {
+      hovering = true; target = HOVER; img.classList.add("is-liquid");
+      if (!raf) raf = requestAnimationFrame(frame);
+    });
+    img.addEventListener("mouseleave", function () { hovering = false; target = 0; });
   })();
 
   /* ---------- CORSI · card flip ---------- */

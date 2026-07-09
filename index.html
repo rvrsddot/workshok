@@ -90,7 +90,7 @@
   <!-- Testi + titoli: Space Grotesk · readout di sistema: Space Mono -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="css/style.css?v=22" />
+  <link rel="stylesheet" href="css/style.css?v=23" />
 </head>
 <body>
   <div class="grid-bg" aria-hidden="true"></div>
@@ -102,12 +102,8 @@
   <svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
       <filter id="liquid" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
-        <feTurbulence type="fractalNoise" baseFrequency="0.009 0.014" numOctaves="2" seed="7" result="noise">
-          <animate attributeName="baseFrequency" dur="17s" repeatCount="indefinite"
-                   calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
-                   values="0.009 0.014;0.014 0.010;0.009 0.014" />
-        </feTurbulence>
-        <feDisplacementMap id="liquidDisp" in="SourceGraphic" in2="noise" scale="9"
+        <feTurbulence type="fractalNoise" baseFrequency="0.011 0.016" numOctaves="1" seed="7" result="noise" />
+        <feDisplacementMap id="liquidDisp" in="SourceGraphic" in2="noise" scale="0"
                            xChannelSelector="R" yChannelSelector="G" />
       </filter>
     </defs>
@@ -279,7 +275,7 @@
     <span class="statusbar__sys"><i id="sb-coords">—</i>&nbsp;·&nbsp;ASCOLI&nbsp;<i id="sb-clock">00:00:00</i></span>
   </div>
 
-  <script src="data/courses.js?v=22"></script>
-  <script src="js/main.js?v=22"></script>
+  <script src="data/courses.js?v=23"></script>
+  <script src="js/main.js?v=23"></script>
 </body>
 </html>
