@@ -26,32 +26,34 @@
   set("hero-where", ed.city ? ed.city + ", IT" : "—");
   set("hero-format", (courses.length || 3) + " corsi · " + (ed.days || "3–5 giorni"));
 
-  /* Wordmark liquido: SOLO durante l'hover (a riposo nessun filtro → costo zero).
-     Al passaggio appare, la turbolenza ondeggia (flusso) e il displacement sale;
-     uscendo torna nitido e l'animazione si spegne. */
+  /* Wordmark: tilt 3D che segue il mouse — solo transform (leggero).
+     Off su touch/reduced-motion → mobile resta la scritta base, ferma. */
   (function () {
-    var turb = document.querySelector("#liquid feTurbulence");
-    var disp = $("liquidDisp");
-    var img = document.querySelector(".hero__wordmark .wordmark");
-    if (!turb || !disp || !img || reduce || coarse) return;
-    var HOVER = 26, scale = 0, target = 0, t = 0, hovering = false, raf = null;
-    function frame() {
-      scale += (target - scale) * 0.14;
-      disp.setAttribute("scale", scale.toFixed(2));
-      if (hovering) {
-        t += 0.03;
-        var bf = 0.011 + Math.sin(t) * 0.004;   // ondeggìo della turbolenza = flusso liquido
-        turb.setAttribute("baseFrequency", bf.toFixed(4) + " " + (bf * 1.45).toFixed(4));
-      }
-      if (hovering || scale > 0.15) { raf = requestAnimationFrame(frame); }
-      else { disp.setAttribute("scale", "0"); img.classList.remove("is-liquid"); raf = null; }
+    var wm = document.querySelector(".hero__wordmark");
+    var hero = document.querySelector(".hero");
+    if (!wm || !hero || reduce || coarse) return;
+    var MAX = 9, trx = 0, tryv = 0, crx = 0, cry = 0, raf = null;
+    function onMove(e) {
+      var r = wm.getBoundingClientRect();
+      var nx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+      var ny = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+      nx = Math.max(-1.3, Math.min(1.3, nx));
+      ny = Math.max(-1.3, Math.min(1.3, ny));
+      tryv = nx * MAX;    // rotateY segue l'asse X del mouse
+      trx = -ny * MAX;    // rotateX segue l'asse Y
+      kick();
     }
-    img.addEventListener("mouseenter", function () {
-      hovering = true; target = HOVER; img.classList.add("is-liquid");
-      if (!raf) raf = requestAnimationFrame(frame);
-    });
-    img.addEventListener("mouseleave", function () { hovering = false; target = 0; });
+    function frame() {
+      crx += (trx - crx) * 0.09; cry += (tryv - cry) * 0.09;
+      wm.style.transform = "perspective(900px) rotateX(" + crx.toFixed(2) + "deg) rotateY(" + cry.toFixed(2) + "deg)";
+      if (Math.abs(trx - crx) > 0.03 || Math.abs(tryv - cry) > 0.03) { raf = requestAnimationFrame(frame); }
+      else { raf = null; }
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+    hero.addEventListener("mousemove", onMove, { passive: true });
+    hero.addEventListener("mouseleave", function () { trx = 0; tryv = 0; kick(); });
   })();
+
 
   /* ---------- CORSI · card flip ---------- */
   var cards = $("cards");
